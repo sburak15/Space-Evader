@@ -11,11 +11,27 @@ import GameplayKit
 
 class GameScene: SKScene {
     
+    let hero = SKSpriteNode (imageNamed: "Spaceship")
+    
     private var label : SKLabelNode?
     private var spinnyNode : SKShapeNode?
     
     override func didMove(to view: SKView) {
         
+        backgroundColor = SKColor.black
+        
+        
+        let xCoord = size.width * 0.5
+        let yCoord = size.height * 0.5
+        
+        hero.size.height = 50
+        hero.size.width = 50
+        
+        hero.position = CGPoint(x: xCoord, y: yCoord)
+        
+        addChild(hero)
+    
+        /*
         // Get label node from scene and store it for use later
         self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
         if let label = self.label {
@@ -34,7 +50,7 @@ class GameScene: SKScene {
             spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
                                               SKAction.fadeOut(withDuration: 0.5),
                                               SKAction.removeFromParent()]))
-        }
+        */
     }
     
     
@@ -62,13 +78,6 @@ class GameScene: SKScene {
         }
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let label = self.label {
-            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
-        }
-        
-        for t in touches { self.touchDown(atPoint: t.location(in: self)) }
-    }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
