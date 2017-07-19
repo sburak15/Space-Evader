@@ -9,7 +9,16 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene {
+struct BodyType {
+    
+    static let None: UInt32 = 0
+    static let Meteor: UInt32 = 1
+    static let Bullet: UInt32 = 2
+    static let Hero: UInt32 = 4
+    
+}
+
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
     let hero = SKSpriteNode (imageNamed: "Spaceship")
     
@@ -76,6 +85,12 @@ class GameScene: SKScene {
         
         hero.position = CGPoint(x: xCoord, y: yCoord)
         
+        hero.physicsBody = SKPhysicsBody(rectangleOf: hero.size)
+        hero.physicsBody?.isDynamic = true
+        hero.physicsBody?.categoryBitMask = BodyType.Hero
+        hero.physicsBody?.contactTestBitMask = BodyType.Meteor
+        hero.physicsBody?.collisionBitMask = 0
+        
         addChild(hero)
 
     
@@ -103,31 +118,43 @@ class GameScene: SKScene {
         
         view.addGestureRecognizer(swipeRight)
         
-
-
-    
-        /*
-        // Get label node from scene and store it for use later
-        self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
-        if let label = self.label {
-            label.alpha = 0.0
-            label.run(SKAction.fadeIn(withDuration: 2.0))
-        }
+        run(SKAction.repeatForever(SKAction.sequence([SKAction.run(addMeteor), SKAction.wait(forDuration: 1.0)])))
         
-        // Create shape node to use during mouse interaction
-        let w = (self.size.width + self.size.height) * 0.05
-        self.spinnyNode = SKShapeNode.init(rectOf: CGSize.init(width: w, height: w), cornerRadius: w * 0.3)
+        physicsWorld.gravity = CGVector(dx: 0, dy: 0)
+        physicsWorld.contactDelegate = self
         
-        if let spinnyNode = self.spinnyNode {
-            spinnyNode.lineWidth = 2.5
-            
-            spinnyNode.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(Double.pi), duration: 1)))
-            spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
-                                              SKAction.fadeOut(withDuration: 0.5),
-                                              SKAction.removeFromParent()]))
-        */
     }
     
+    func random() -> CGFloat {
+        
+        return CGFloat(Float(arc4random()) / Float(UINT32_MAX))
+    }
+    
+    func addMeteor() {
+        
+        var meteor: Enemy
+        
+        meteor = Enemy(imageNamed: "MeteorLeft")
+        
+        meteor.size.height = 35
+        meteor.size.width = 50
+        
+        let randomY = random() * ((size.height - meteor.size.height/2)-meteor.size.height/2) + meteor.size.height/2
+        
+        meteor.position = CGPoint(x: size.width + meteor.size.width/2, y: randomY)
+        
+        meteor.physicsBody = SKPhysicsBody(rectangleOf: meteor.size)
+        meteor.physicsBody?.isDynamic = true
+        meteor.physicsBody?.categoryBitMask = BodyType.Meteor
+        meteor.physicsBody?.contactTestBitMask = BodyType.Bullet
+        meteor.physicsBody?.collisionBitMask = 0
+        
+        addChild(meteor)
+        
+        var moveMeteor = SKAction.move(to: CGPoint(x: -meteor.size.width/2, y: randomY), duration: 5.0)
+        
+        meteor.run(SKAction.sequence([moveMeteor, SKAction.removeFromParent()]))
+    }
     
     func touchDown(atPoint pos : CGPoint) {
         if let n = self.spinnyNode?.copy() as! SKShapeNode? {
@@ -169,6 +196,13 @@ class GameScene: SKScene {
         
         bullet.position = CGPoint(x: hero.position.x, y: hero.position.y)
         
+        bullet.physicsBody = SKPhysicsBody(circleOfRadius: bullet.size.width/2)
+        bullet.physicsBody?.isDynamic = true
+        bullet.physicsBody?.categoryBitMask = BodyType.Bullet
+        bullet.physicsBody?.contactTestBitMask = BodyType.Meteor
+        bullet.physicsBody?.collisionBitMask = 0
+        bullet.physicsBody?.usesPreciseCollisionDetection = true
+        
         addChild(bullet)
         
         guard let touch = touches.first else { return }
@@ -194,4 +228,6 @@ class GameScene: SKScene {
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
     }
+
 }
+
