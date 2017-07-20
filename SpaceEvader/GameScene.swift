@@ -27,7 +27,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var meteorScore = 0
     
     var scoreLabel = SKLabelNode(fontNamed: "Arial")
-    
+
     var level = 1
     var levelLabel = SKLabelNode(fontNamed: "Arial")
     var levelLimit = 5
@@ -37,6 +37,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var enemyHealth = 1
     
     var gameIsRunning: Bool = true
+    
+    var meteorTime = 5.0
+    
+    var button: SKNode! = nil
     
     private var label: SKLabelNode?
     private var spinnyNode: SKShapeNode?
@@ -156,7 +160,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(levelLabel)
         
         levelLabel.text = "Level: 1"
-        
     }
     
     func random() -> CGFloat {
@@ -187,7 +190,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         enemies.append(meteor)
         
-        let moveMeteor = SKAction.move(to: CGPoint(x: -meteor.size.width/2, y: randomY), duration: 5.0)
+        let moveMeteor = SKAction.move(to: CGPoint(x: -meteor.size.width/2, y: randomY), duration: meteorTime)
         
         meteor.run(SKAction.sequence([moveMeteor, SKAction.removeFromParent()]))
     }
@@ -244,6 +247,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             guard let touch = touches.first else { return }
         
             let touchLocation = touch.location(in: self)
+            
+            // Check if the location of the touch is within the button's bounds
+        
         
             let vector = CGVector(dx: -(hero.position.x - touchLocation.x), dy: -(hero.position.y - touchLocation.y))
         
@@ -254,6 +260,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             ])
         
             bullet.run(projectileAction)
+            
+            if gameIsRunning == false {
+                //let touchalso = touches.first
+               // let touchLocationAlso = touchalso!.location(in: self)
+                if button.contains(touchLocation) {
+                    removeAllChildren()
+                    addChild(hero)
+                    meteorScore = 0
+                }
+            }
         }
     }
     
@@ -414,6 +430,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         stopEnemies()
         
+        createButton()
+        
         gameIsRunning = false
     }
     
@@ -437,8 +455,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             addChild(explosion)
         
         }
-        
-        
+
     }
     
     func addEnemies() {
@@ -464,6 +481,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         levelLabel.text = "Level: \(level)"
         
+        meteorTime -= 1
+        
     }
     
     func checkLevelIncrease() {
@@ -479,6 +498,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let runEnemies = SKAction.sequence([SKAction.run(stopEnemies), SKAction.wait(forDuration: 7.0), SKAction.run(increaseLevel), SKAction.run(addEnemies)])
             run(runEnemies)
         }
+    }
+    
+    func createButton() {
+        button = SKSpriteNode(color: SKColor.red, size: CGSize(width: 100, height: 44))
+        // Put it in the center of the scene
+        button.position = CGPoint(x:self.frame.midX, y:self.frame.midY - 80);
+        
+        self.addChild(button)
     }
 }
 
