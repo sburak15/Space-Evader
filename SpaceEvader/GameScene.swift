@@ -436,6 +436,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         levelLabel.text = "Level: 1"
         
+        levelLimit = 5
+        
+        levelIncrease = 5
+        
+        meteorTime = 5.0
+        
         addChild(scoreOverLabel)
         
         stopEnemies()
