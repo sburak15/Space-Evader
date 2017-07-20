@@ -40,7 +40,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var meteorTime = 5.0
     
-    var button: SKNode! = nil
+    var button: SKNode! = SKSpriteNode(color: SKColor.red, size: CGSize(width: 100, height: 44))
+
     
     private var label: SKLabelNode?
     private var spinnyNode: SKShapeNode?
@@ -111,7 +112,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         addChild(hero)
 
-    
         let swipeUp: UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(swipedUp))
         
         swipeUp.direction = .up
@@ -225,11 +225,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        //for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-        if gameIsRunning {
+
+       if gameIsRunning {
+        
             let bullet = SKSpriteNode()
         
-            bullet.color = UIColor.green
+            bullet.color = UIColor.purple
         
             bullet.size = CGSize(width: 5, height: 5)
         
@@ -247,12 +248,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             guard let touch = touches.first else { return }
         
             let touchLocation = touch.location(in: self)
-            
-            // Check if the location of the touch is within the button's bounds
-        
         
             let vector = CGVector(dx: -(hero.position.x - touchLocation.x), dy: -(hero.position.y - touchLocation.y))
-        
             let projectileAction = SKAction.sequence([
             SKAction.repeat(SKAction.move(by: vector, duration: 0.5), count: 10),
             SKAction.wait(forDuration: 0.5),
@@ -260,16 +257,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             ])
         
             bullet.run(projectileAction)
+       }
+        
+        else {
+        
+            let touchalso = touches.first
+            let touchLocationAlso = touchalso!.location(in: self)
+
+            if button.contains(touchLocationAlso) {
+                removeAllChildren()
+                addChild(hero)
+                addEnemies()
+                meteorScore = 0
+                addChild(scoreLabel)
+                level = 1
+                addChild(levelLabel)
+                gameIsRunning = true
             
-            if gameIsRunning == false {
-                //let touchalso = touches.first
-               // let touchLocationAlso = touchalso!.location(in: self)
-                if button.contains(touchLocation) {
-                    removeAllChildren()
-                    addChild(hero)
-                    meteorScore = 0
-                }
             }
+        
         }
     }
     
@@ -412,7 +418,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         gameOverLabel.fontSize = 40
         
-        gameOverLabel.position = CGPoint(x: self.size.width/2, y: self.size.height/2 + 20)
+        gameOverLabel.position = CGPoint(x: self.size.width/2, y: self.size.height/2 + 50)
         
         addChild(gameOverLabel)
         
@@ -424,7 +430,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         scoreOverLabel.fontSize = 40
         
-        scoreOverLabel.position = CGPoint(x: self.size.width/2, y: self.size.height/2 - 30)
+        scoreOverLabel.position = CGPoint(x: self.size.width/2, y: self.size.height/2)
+        
+        scoreLabel.text = "Score: 0"
+        
+        levelLabel.text = "Level: 1"
         
         addChild(scoreOverLabel)
         
@@ -475,7 +485,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func increaseLevel() {
         
-        levelLimit +=  levelIncrease
+        levelLimit += levelIncrease
         
         level += 1
         
@@ -501,11 +511,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func createButton() {
-        button = SKSpriteNode(color: SKColor.red, size: CGSize(width: 100, height: 44))
-        // Put it in the center of the scene
-        button.position = CGPoint(x:self.frame.midX, y:self.frame.midY - 80);
         
-        self.addChild(button)
+        button.position = CGPoint(x:self.frame.midX, y:self.frame.midY - 45)
+        
+        let buttonLabel = SKLabelNode(fontNamed: "Arial")
+      
+        buttonLabel.text = "Play Again"
+        
+        buttonLabel.fontColor = UIColor.white
+        
+        buttonLabel.fontSize = 20
+        
+        buttonLabel.position = CGPoint(x: self.frame.midX, y:self.frame.midY - 52)
+    
+        addChild(button)
+        addChild(buttonLabel)
+        
     }
 }
 
