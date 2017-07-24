@@ -45,6 +45,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private var label: SKLabelNode?
     private var spinnyNode: SKShapeNode?
     
+    func background() {
+        
+        let bg = SKSpriteNode(imageNamed: "background")
+        bg.zPosition = 1
+        bg.position = CGPoint(x: size.width / 2, y: size.height / 2)
+        bg.size = CGSize(width: size.width, height: size.height)
+        addChild(bg)
+        
+    }
+    
     
     func swipedUp(sender:UISwipeGestureRecognizer){
         var actionMove: SKAction
@@ -94,6 +104,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
       
         backgroundColor = SKColor.black
         
+        background()
         
         let xCoord = size.width * 0.5
         let yCoord = size.height * 0.5
@@ -108,6 +119,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         hero.physicsBody?.categoryBitMask = BodyType.Hero
         hero.physicsBody?.contactTestBitMask = BodyType.Meteor
         hero.physicsBody?.collisionBitMask = 0
+        hero.zPosition = 6
         
         addChild(hero)
 
@@ -148,6 +160,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         scoreLabel.position = CGPoint(x: self.size.width/2, y: self.size.height-50)
         
+        scoreLabel.zPosition = 6
+        
         addChild(scoreLabel)
         
         scoreLabel.text = "Score: \(meteorScore)"
@@ -157,6 +171,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         levelLabel.fontSize = 20
         
         levelLabel.position = CGPoint(x: self.size.width * 0.8, y: self.size.height * 0.9)
+        
+        levelLabel.zPosition = 6
         
         addChild(levelLabel)
         
@@ -186,6 +202,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         meteor.physicsBody?.categoryBitMask = BodyType.Meteor
         meteor.physicsBody?.contactTestBitMask = BodyType.Bullet
         meteor.physicsBody?.collisionBitMask = 0
+        meteor.zPosition = 6
         
         addChild(meteor)
         
@@ -214,6 +231,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         specialMeteor.physicsBody?.categoryBitMask = BodyType.Meteor
         specialMeteor.physicsBody?.contactTestBitMask = BodyType.Bullet
         specialMeteor.physicsBody?.collisionBitMask = 0
+        specialMeteor.zPosition = 6
         
         addChild(specialMeteor)
         
@@ -261,7 +279,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
             let bullet = SKSpriteNode()
         
-            bullet.color = UIColor.magenta
+            bullet.color = UIColor.yellow
             bullet.size = CGSize(width: 5, height: 5)
         
             bullet.position = CGPoint(x: hero.position.x, y: hero.position.y)
@@ -272,6 +290,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             bullet.physicsBody?.contactTestBitMask = BodyType.Meteor
             bullet.physicsBody?.collisionBitMask = 0
             bullet.physicsBody?.usesPreciseCollisionDetection = true
+            bullet.zPosition = 6
         
             addChild(bullet)
         
@@ -304,6 +323,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 level = 1
                 addChild(levelLabel)
                 gameIsRunning = true
+                background()
             
             }
         
@@ -446,6 +466,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         else {
             
             meteor.size.height -= 15
+            
             meteor.size.width -= 15
             
         }
@@ -464,6 +485,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         scoreOverLabel.position = CGPoint(x: self.size.width/2, y: self.size.height/2)
         
+        scoreOverLabel.zPosition = 6
+        
         scoreLabel.text = "Score: 0"
         
         levelLabel.text = "Level: 1"
@@ -481,6 +504,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         createButton()
         
         gameIsRunning = false
+        
+        background()
     }
     
     func heroHitMeteor(player: SKSpriteNode, meteor: SKSpriteNode) {
@@ -497,6 +522,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         gameOverLabel.position = CGPoint(x: self.size.width/2, y: self.size.height/2 + 50)
         
+        gameOverLabel.zPosition = 6
+        
         addChild(gameOverLabel)
         
         reset()
@@ -512,6 +539,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             explosion.color = UIColor.orange
             explosion.size = CGSize(width: 3, height: 3)
             explosion.position = CGPoint(x: meteor.position.x, y: meteor.position.y)
+            explosion.zPosition = 6
             
             let randomExplosionX = (random() * (1000 + size.width)) - size.width
             
@@ -562,15 +590,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         buttonLabel.fontSize = 20
         
         buttonLabel.position = CGPoint(x: self.frame.midX, y:self.frame.midY - 52)
+        
+        button.zPosition = 6
+        
+        buttonLabel.zPosition = 6
     
         addChild(button)
         
         addChild(buttonLabel)
         
     }
-
-
-
     
     func youWin() {
         
@@ -585,6 +614,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         youWinLabel.fontSize = 40
         
         youWinLabel.position = CGPoint(x: self.size.width/2, y: self.size.height/2 + 50)
+        
+        youWinLabel.zPosition = 6
         
         addChild(youWinLabel)
         
