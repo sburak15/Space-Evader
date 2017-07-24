@@ -230,8 +230,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
             let bullet = SKSpriteNode()
         
-            bullet.color = UIColor.purple
-        
+            bullet.color = UIColor.magenta
             bullet.size = CGSize(width: 5, height: 5)
         
             bullet.position = CGPoint(x: hero.position.x, y: hero.position.y)
