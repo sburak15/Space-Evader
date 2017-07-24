@@ -30,8 +30,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     var level = 1
     var levelLabel = SKLabelNode(fontNamed: "Arial")
-    var levelLimit = 5
-    var levelIncrease = 5
+    var levelLimit = 10
+    var levelIncrease = 10
     
     var enemies = [SKSpriteNode]()
     var enemyHealth = 1
@@ -450,7 +450,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func addEnemies() {
         
-        run(SKAction.repeatForever(SKAction.sequence([SKAction.run(addMeteor), SKAction.wait(forDuration: 1.0)])), withKey:"addEnemies")
+        run(SKAction.repeatForever(SKAction.sequence([SKAction.run(addMeteor), SKAction.wait(forDuration: 0.75)])), withKey:"addEnemies")
         
     }
     
@@ -501,9 +501,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         levelLabel.text = "Level: 1"
         
-        levelLimit = 5
+        levelLimit = 10
         
-        levelIncrease = 5
+        levelIncrease = 10
         
         meteorTime = 5.0
         
@@ -543,13 +543,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         levelLabel.text = "Level: \(level)"
         
-        meteorTime -= 1
+        meteorTime -= 0.5
         
     }
     
     func checkLevelIncrease() {
         
-        if meteorScore != 25 {
+        if meteorScore != 100 {
             
             if meteorScore >= levelLimit {
                 
@@ -559,7 +559,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 enemies = [Enemy] ()
                 
-                let runEnemies = SKAction.sequence([SKAction.run(stopEnemies), SKAction.wait(forDuration: 7.0), SKAction.run(increaseLevel), SKAction.run(addEnemies)])
+                let runEnemies = SKAction.sequence([SKAction.run(stopEnemies), SKAction.wait(forDuration: 3.0), SKAction.run(increaseLevel), SKAction.run(addEnemies)])
                 run(runEnemies)
             }
             
