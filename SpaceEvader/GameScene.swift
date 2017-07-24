@@ -422,34 +422,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         addChild(gameOverLabel)
         
-        let scoreOverLabel = SKLabelNode(fontNamed: "Arial")
+        reset()
         
-        scoreOverLabel.text = "Score: \(meteorScore)"
-        
-        scoreOverLabel.fontColor = UIColor.white
-        
-        scoreOverLabel.fontSize = 40
-        
-        scoreOverLabel.position = CGPoint(x: self.size.width/2, y: self.size.height/2)
-        
-        scoreLabel.text = "Score: 0"
-        
-        levelLabel.text = "Level: 1"
-        
-        levelLimit = 5
-        
-        levelIncrease = 5
-        
-        meteorTime = 5.0
-        
-        addChild(scoreOverLabel)
-        
-        stopEnemies()
-        
-        createButton()
-        
-        gameIsRunning = false
-    }
+        }
     
     func explodeMeteor(meteor: SKSpriteNode) {
         
@@ -489,32 +464,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         removeAction(forKey: "addEnemies")
     }
     
-    func increaseLevel() {
         
-        levelLimit += levelIncrease
-        
-        level += 1
-        
-        levelLabel.text = "Level: \(level)"
-        
-        meteorTime -= 1
-        
-    }
-    
-    func checkLevelIncrease() {
-    
-        if meteorScore >= levelLimit {
-            
-            for enemy in enemies {
-                enemy.removeFromParent()
-            }
-            
-            enemies = [Enemy] ()
-            
-            let runEnemies = SKAction.sequence([SKAction.run(stopEnemies), SKAction.wait(forDuration: 7.0), SKAction.run(increaseLevel), SKAction.run(addEnemies)])
-            run(runEnemies)
-        }
-    }
     
     func createButton() {
         
@@ -534,5 +484,92 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(buttonLabel)
         
     }
-}
 
+
+    func reset() {
+        
+        let scoreOverLabel = SKLabelNode(fontNamed: "Arial")
+        
+        scoreOverLabel.text = "Score: \(meteorScore)"
+        
+        scoreOverLabel.fontColor = UIColor.white
+        
+        scoreOverLabel.fontSize = 40
+        
+        scoreOverLabel.position = CGPoint(x: self.size.width/2, y: self.size.height/2)
+        
+        scoreLabel.text = "Score: 0"
+        
+        levelLabel.text = "Level: 1"
+        
+        levelLimit = 5
+        
+        levelIncrease = 5
+        
+        meteorTime = 5.0
+        
+        addChild(scoreOverLabel)
+        
+        stopEnemies()
+        
+        createButton()
+        
+        gameIsRunning = false
+    }
+    
+    func youWin() {
+        
+        removeAllChildren()
+        
+        let youWinLabel = SKLabelNode(fontNamed: "Arial")
+        
+        youWinLabel.text = "You Win!"
+        
+        youWinLabel.fontColor = UIColor.white
+        
+        youWinLabel.fontSize = 40
+        
+        youWinLabel.position = CGPoint(x: self.size.width/2, y: self.size.height/2 + 50)
+        
+        addChild(youWinLabel)
+        
+        reset()
+    }
+    
+    func increaseLevel() {
+        
+        levelLimit += levelIncrease
+        
+        level += 1
+        
+        levelLabel.text = "Level: \(level)"
+        
+        meteorTime -= 1
+        
+    }
+    
+    func checkLevelIncrease() {
+        
+        if meteorScore != 25 {
+            
+            if meteorScore >= levelLimit {
+                
+                for enemy in enemies {
+                    enemy.removeFromParent()
+                }
+                
+                enemies = [Enemy] ()
+                
+                let runEnemies = SKAction.sequence([SKAction.run(stopEnemies), SKAction.wait(forDuration: 7.0), SKAction.run(increaseLevel), SKAction.run(addEnemies)])
+                run(runEnemies)
+            }
+            
+        }
+            
+        else {
+            
+            youWin()
+        }
+
+    }
+}
