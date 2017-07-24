@@ -11,10 +11,12 @@ import SpriteKit
 
 class Enemy: SKSpriteNode {
     
+    var health = 1
+    var scoreAdd: Int
     init(imageNamed: String) {
         
         let texture = SKTexture(imageNamed: "\(imageNamed)")
-        
+        scoreAdd = 1
         super.init(texture: texture, color: UIColor(), size: texture.size())
     }
     

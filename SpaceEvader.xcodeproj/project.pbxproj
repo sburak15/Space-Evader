@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		941C39FB1F264675001DA9FB /* SpecialMeteor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941C39FA1F264675001DA9FB /* SpecialMeteor.swift */; };
 		94EDF9A51F1FAB6800C9784A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EDF9A41F1FAB6800C9784A /* AppDelegate.swift */; };
 		94EDF9A91F1FAB6900C9784A /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 94EDF9A81F1FAB6900C9784A /* Actions.sks */; };
 		94EDF9AB1F1FAB6900C9784A /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EDF9AA1F1FAB6900C9784A /* GameScene.swift */; };
@@ -18,6 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		941C39FA1F264675001DA9FB /* SpecialMeteor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpecialMeteor.swift; sourceTree = "<group>"; };
 		94EDF9A11F1FAB6800C9784A /* SpaceEvader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpaceEvader.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		94EDF9A41F1FAB6800C9784A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		94EDF9A81F1FAB6900C9784A /* Actions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Actions.sks; sourceTree = "<group>"; };
@@ -63,6 +65,7 @@
 				94EDF9A41F1FAB6800C9784A /* AppDelegate.swift */,
 				94EDF9A81F1FAB6900C9784A /* Actions.sks */,
 				94EDF9AA1F1FAB6900C9784A /* GameScene.swift */,
+				941C39FA1F264675001DA9FB /* SpecialMeteor.swift */,
 				94EDF9AC1F1FAB6900C9784A /* GameViewController.swift */,
 				94EDF9AE1F1FAB6900C9784A /* Main.storyboard */,
 				94EDF9B11F1FAB6900C9784A /* Assets.xcassets */,
@@ -148,6 +151,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				94EDF9E11F1FEDCA00C9784A /* Enemy.swift in Sources */,
+				941C39FB1F264675001DA9FB /* SpecialMeteor.swift in Sources */,
 				94EDF9AB1F1FAB6900C9784A /* GameScene.swift in Sources */,
 				94EDF9AD1F1FAB6900C9784A /* GameViewController.swift in Sources */,
 				94EDF9A51F1FAB6800C9784A /* AppDelegate.swift in Sources */,

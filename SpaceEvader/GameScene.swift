@@ -34,7 +34,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var levelIncrease = 10
     
     var enemies = [SKSpriteNode]()
-    var enemyHealth = 1
     
     var gameIsRunning: Bool = true
     
@@ -138,6 +137,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         addEnemies()
         
+        addSpecialMeteors()
+        
         physicsWorld.gravity = CGVector(dx: 0, dy: 0)
         physicsWorld.contactDelegate = self
         
@@ -193,6 +194,36 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let moveMeteor = SKAction.move(to: CGPoint(x: -meteor.size.width/2, y: randomY), duration: meteorTime)
         
         meteor.run(SKAction.sequence([moveMeteor, SKAction.removeFromParent()]))
+    }
+    
+    func addSpecialMeteor() {
+        
+        var specialMeteor : SpecialMeteor
+        
+        specialMeteor = SpecialMeteor(imageNamed: "SpecialMeteor")
+        
+        specialMeteor.size.height = 80
+        specialMeteor.size.width = 95
+        
+        let randomY = random() * ((size.height - specialMeteor.size.height/2)-specialMeteor.size.height/2) + specialMeteor.size.height/2
+        
+        specialMeteor.position = CGPoint(x: size.width + specialMeteor.size.width/2, y: randomY)
+        
+        specialMeteor.physicsBody = SKPhysicsBody(rectangleOf: specialMeteor.size)
+        specialMeteor.physicsBody?.isDynamic = true
+        specialMeteor.physicsBody?.categoryBitMask = BodyType.Meteor
+        specialMeteor.physicsBody?.contactTestBitMask = BodyType.Bullet
+        specialMeteor.physicsBody?.collisionBitMask = 0
+        
+        addChild(specialMeteor)
+        
+        enemies.append(specialMeteor)
+        
+        let moveMeteor = SKAction.move(to: CGPoint(x: -specialMeteor.size.width/2, y: randomY), duration: meteorTime)
+        
+        specialMeteor.run(SKAction.sequence([moveMeteor, SKAction.removeFromParent()]))
+
+        
     }
     
     func touchDown(atPoint pos : CGPoint) {
@@ -267,6 +298,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 removeAllChildren()
                 addChild(hero)
                 addEnemies()
+                addSpecialMeteors()
                 meteorScore = 0
                 addChild(scoreLabel)
                 level = 1
@@ -385,24 +417,70 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
-    func bulletHitMeteor(bullet: SKSpriteNode, meteor: SKSpriteNode) {
+    func bulletHitMeteor(bullet: SKSpriteNode, meteor: Enemy) {
         
         bullet.removeFromParent()
+
+        meteor.health -= 1
         
-        meteor.removeFromParent()
         
-        meteorScore += 1
+        if meteor.health == 0 {
+            
+            meteor.removeFromParent()
         
-        scoreLabel.text = "Score: \(meteorScore)"
+            meteorScore += meteor.scoreAdd
         
-        explodeMeteor(meteor: meteor)
+            scoreLabel.text = "Score: \(meteorScore)"
         
-        checkLevelIncrease()
+            explodeMeteor(meteor: meteor)
         
-        if let meteorIndex = enemies.index(of: meteor) {
+            checkLevelIncrease()
+        
+            if let meteorIndex = enemies.index(of: meteor) {
             enemies.remove(at: meteorIndex)
+        
+            }
+            
+        }
+        
+        else {
+            
+            meteor.size.height -= 15
+            meteor.size.width -= 15
+            
         }
     
+    }
+    
+    func reset() {
+        
+        let scoreOverLabel = SKLabelNode(fontNamed: "Arial")
+        
+        scoreOverLabel.text = "Score: \(meteorScore)"
+        
+        scoreOverLabel.fontColor = UIColor.white
+        
+        scoreOverLabel.fontSize = 40
+        
+        scoreOverLabel.position = CGPoint(x: self.size.width/2, y: self.size.height/2)
+        
+        scoreLabel.text = "Score: 0"
+        
+        levelLabel.text = "Level: 1"
+        
+        levelLimit = 10
+        
+        levelIncrease = 10
+        
+        meteorTime = 5.0
+        
+        addChild(scoreOverLabel)
+        
+        stopEnemies()
+        
+        createButton()
+        
+        gameIsRunning = false
     }
     
     func heroHitMeteor(player: SKSpriteNode, meteor: SKSpriteNode) {
@@ -451,6 +529,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func addEnemies() {
         
         run(SKAction.repeatForever(SKAction.sequence([SKAction.run(addMeteor), SKAction.wait(forDuration: 0.75)])), withKey:"addEnemies")
+    }
+    
+    func addSpecialMeteors() {
+        
+        run(SKAction.repeatForever(SKAction.sequence([SKAction.wait(forDuration: 7), SKAction.run(self.addSpecialMeteor)])), withKey: "addSpecialMeteors")
         
     }
     
@@ -461,9 +544,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         removeAction(forKey: "addEnemies")
-    }
-    
         
+        removeAction(forKey: "addSpecialMeteors")
+
+    }
     
     func createButton() {
         
@@ -480,41 +564,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         buttonLabel.position = CGPoint(x: self.frame.midX, y:self.frame.midY - 52)
     
         addChild(button)
+        
         addChild(buttonLabel)
         
     }
 
 
-    func reset() {
-        
-        let scoreOverLabel = SKLabelNode(fontNamed: "Arial")
-        
-        scoreOverLabel.text = "Score: \(meteorScore)"
-        
-        scoreOverLabel.fontColor = UIColor.white
-        
-        scoreOverLabel.fontSize = 40
-        
-        scoreOverLabel.position = CGPoint(x: self.size.width/2, y: self.size.height/2)
-        
-        scoreLabel.text = "Score: 0"
-        
-        levelLabel.text = "Level: 1"
-        
-        levelLimit = 10
-        
-        levelIncrease = 10
-        
-        meteorTime = 5.0
-        
-        addChild(scoreOverLabel)
-        
-        stopEnemies()
-        
-        createButton()
-        
-        gameIsRunning = false
-    }
+
     
     func youWin() {
         
@@ -559,7 +615,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 enemies = [Enemy] ()
                 
-                let runEnemies = SKAction.sequence([SKAction.run(stopEnemies), SKAction.wait(forDuration: 3.0), SKAction.run(increaseLevel), SKAction.run(addEnemies)])
+                let runEnemies = SKAction.sequence([SKAction.run(stopEnemies), SKAction.wait(forDuration: 3.0), SKAction.run(increaseLevel), SKAction.run(addEnemies), SKAction.run(addSpecialMeteors)])
                 run(runEnemies)
             }
             
@@ -571,4 +627,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
 
     }
+    
+   
+
 }
