@@ -219,8 +219,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         specialMeteor = SpecialMeteor(imageNamed: "SpecialMeteor")
         
-        specialMeteor.size.height = 80
-        specialMeteor.size.width = 95
+        specialMeteor.size.height = 95
+        specialMeteor.size.width = 110
         
         let randomY = random() * ((size.height - specialMeteor.size.height/2)-specialMeteor.size.height/2) + specialMeteor.size.height/2
         
@@ -290,6 +290,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             bullet.physicsBody?.contactTestBitMask = BodyType.Meteor
             bullet.physicsBody?.collisionBitMask = 0
             bullet.physicsBody?.usesPreciseCollisionDetection = true
+        
             bullet.zPosition = 6
         
             addChild(bullet)
@@ -465,9 +466,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         else {
             
-            meteor.size.height -= 15
+            meteor.size.height -= 20
             
-            meteor.size.width -= 15
+            meteor.size.width -= 20
             
         }
     
